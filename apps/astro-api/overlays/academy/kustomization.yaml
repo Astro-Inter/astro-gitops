@@ -1,0 +1,10 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: astro-api
+resources:
+  - ../../base
+images:
+  - name: astro-api
+    newName: ghcr.io/astro-inter/astro-api
+    # A primeira PR de versão substituirá esta tag; ainda não há imagem publicada.
+    newTag: pending-first-release
