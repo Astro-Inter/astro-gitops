@@ -12,9 +12,11 @@ Argo CD → EKS CD-Astro.
 | Aplicação | Código | Configuração | Argo CD |
 | --- | --- | --- | --- |
 | API de IA (API + agente A2A no mesmo Pod) | [astro-ai-api](https://github.com/Astro-Inter/astro-ai-api) | apps/astro-ai-api/overlays/academy | astro-ai-api-academy |
+| API Java | [astro-api](https://github.com/Astro-Inter/astro-api) | apps/astro-api/overlays/academy | astro-api-academy |
 
-A segunda API ainda não foi cadastrada: faltam repositório, imagem, portas,
-variáveis e dimensionamento. Nenhuma aplicação sobe apenas por existir na
+As duas APIs estão cadastradas, mas a Java aguarda a primeira imagem publicada
+e aprovada, Secrets e ativação conforme docs/ASTRO-API.md.
+Nenhuma aplicação sobe apenas por existir na
 organização; cada uma precisa de manifestos e de uma Application do Argo CD.
 
 ## Organização
@@ -53,6 +55,7 @@ Para validar localmente:
 
 ```bash
 kubectl kustomize apps/astro-ai-api/overlays/academy
+kubectl kustomize apps/astro-api/overlays/academy
 python -m pip install 'PyYAML>=6,<7'
 python -m unittest discover -s tests
 ```

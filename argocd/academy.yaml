@@ -4,12 +4,14 @@ metadata:
   name: astro-academy
   namespace: argocd
 spec:
-  description: API de IA no AWS Academy, sem provisionar infraestrutura AWS
+  description: Duas APIs Astro no AWS Academy, sem provisionar infraestrutura AWS
   sourceRepos:
     - https://github.com/Astro-Inter/astro-gitops.git
   destinations:
     - server: https://kubernetes.default.svc
       namespace: astro-ai
+    - server: https://kubernetes.default.svc
+      namespace: astro-api
   clusterResourceWhitelist:
     - group: ""
       kind: Namespace
