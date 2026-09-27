@@ -1,5 +1,6 @@
 from pathlib import Path
 import re
+import subprocess
 import unittest
 
 import yaml
@@ -9,6 +10,44 @@ OVERLAY = ROOT / "apps/astro-ai-api/overlays/academy"
 
 
 class ManifestTests(unittest.TestCase):
+    def test_academy_nodeports_render_without_changing_base_services(self):
+        ports = set()
+        for name, namespace, node_port in (
+            ("astro-ai-api", "astro-ai", 30080),
+            ("astro-api", "astro-api", 30081),
+        ):
+            with self.subTest(application=name):
+                base = yaml.safe_load(
+                    (ROOT / f"apps/{name}/base/service.yaml").read_text())
+                self.assertEqual(base["spec"]["type"], "ClusterIP")
+                self.assertNotIn("nodePort", base["spec"]["ports"][0])
+                rendered = subprocess.run(
+                    ["kubectl", "kustomize", str(ROOT / f"apps/{name}/overlays/academy")],
+                    check=True, capture_output=True, text=True,
+                ).stdout
+                objects = list(yaml.safe_load_all(rendered))
+                services = [obj for obj in objects if obj.get("kind") == "Service"]
+                self.assertEqual(len(services), 1)
+                svc = services[0]
+                self.assertEqual(svc["metadata"]["name"], name)
+                self.assertEqual(svc["metadata"]["namespace"], namespace)
+                self.assertEqual(svc["spec"]["type"], "NodePort")
+                self.assertEqual(svc["spec"]["externalTrafficPolicy"], "Cluster")
+                self.assertEqual(svc["spec"]["selector"], base["spec"]["selector"])
+                self.assertEqual(svc["spec"]["ports"], [{
+                    "name": "http", "port": 80, "targetPort": "http",
+                    "protocol": "TCP", "nodePort": node_port,
+                }])
+                deploy = next(obj for obj in objects if obj.get("kind") == "Deployment")
+                labels = deploy["spec"]["template"]["metadata"]["labels"]
+                for key, value in svc["spec"]["selector"].items():
+                    self.assertEqual(labels[key], value)
+                containers = deploy["spec"]["template"]["spec"]["containers"]
+                self.assertTrue(any(p["name"] == "http"
+                                    for c in containers for p in c.get("ports", [])))
+                self.assertNotIn(node_port, ports)
+                ports.add(node_port)
+
     def test_image_is_immutable_and_no_ingress(self):
         overlay = yaml.safe_load((OVERLAY / "kustomization.yaml").read_text())
         self.assertEqual(overlay["resources"], ["../../base"])

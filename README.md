@@ -61,4 +61,6 @@ python -m unittest discover -s tests
 ```
 
 Consulte [o guia de ativação](docs/ACADEMY.md) antes de aplicar o bootstrap.
+Para os NodePorts e requisitos de rede do ALB interno, consulte
+[o guia de acesso no Academy](docs/ALB-ACADEMY.md).
 Ter arquivos no GitHub não significa que a API já esteja no ar.
