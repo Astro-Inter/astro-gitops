@@ -3,6 +3,8 @@ kind: Kustomization
 namespace: astro-api
 resources:
   - ../../base
+patches:
+  - path: service-patch.yaml
 images:
   - name: astro-api
     newName: ghcr.io/astro-inter/astro-api

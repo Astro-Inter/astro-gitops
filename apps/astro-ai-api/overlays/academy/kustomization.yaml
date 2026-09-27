@@ -10,3 +10,4 @@ images:
 patches:
   - path: deployment-patch.yaml
   - path: pdb-patch.yaml
+  - path: service-patch.yaml
