@@ -9,4 +9,4 @@ images:
   - name: astro-api
     newName: ghcr.io/astro-inter/astro-api
     # A primeira PR de versão substituirá esta tag; ainda não há imagem publicada.
-    newTag: sha-26b076f6603796320f89b8249f1753fae7f2a6bf
+    newTag: sha-32977b62d3851f021200603e7767e4ccdbb52aff
