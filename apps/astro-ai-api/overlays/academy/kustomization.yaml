@@ -6,7 +6,7 @@ resources:
 images:
   - name: astro-ai-api
     newName: ghcr.io/astro-inter/astro-ai-api
-    newTag: sha-1dc9927023e58b2e938f6e4bb27c02e11ed7d4d8
+    newTag: sha-07d0e898a5c3969e1b1223a5252252af04751b79
 patches:
   - path: deployment-patch.yaml
   - path: pdb-patch.yaml
